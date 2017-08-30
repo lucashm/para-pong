@@ -22,7 +22,7 @@ main =
         { view = View.view
         , init = (Model.init, Cmd.none)
         , update = Msg.update
-        , subscriptions = always Sub.none
+        , subscriptions = subscriptions
         }
 
 subscriptions : Model -> Sub Msg
