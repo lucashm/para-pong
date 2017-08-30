@@ -1,6 +1,6 @@
 module Main exposing (..)
-
-
+import Time exposing (..)
+import Keyboard.Extra exposing (..)
 import Html exposing (Html)
 import Model
 import Msg
@@ -24,3 +24,10 @@ main =
         , update = Msg.update
         , subscriptions = always Sub.none
         }
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+  Sub.batch
+  [ Sub.map Msg.KeyboardMsg Keyboard.Extra.subscriptions
+  , Time.every ((1000/60*millisecond)) Msg.Tick
+  ]
