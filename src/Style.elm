@@ -6,4 +6,5 @@ backgroundStyle =
   , ("justify-content", "center")
   , ("align-items", "center")
   , ("margin-top", "50px")
+  , ("flex-direction", "column")
   ]
