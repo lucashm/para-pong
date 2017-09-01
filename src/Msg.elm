@@ -18,6 +18,8 @@ type Msg
     | Tick Time
     | MoveBall
     | CollideBall
+    | IncreaseSpeed Time
+    | MoveObstacle
 
 
 update : Msg -> Model.Model -> ( Model.Model, Cmd Msg )
@@ -33,6 +35,17 @@ update msg model =
             |> andThen  (MovePlayer2 direction2)
             |> andThen  (MoveBall)
             |> andThen  (CollideBall)
+            |> andThen (MoveObstacle)
+
+
+        IncreaseSpeed newTime ->
+          let
+            (x,y) = model.ballSpeed
+          in
+          { model
+          | ballSpeed = ((x * 1.01),(y * 1.02))
+          , time = newTime
+          } ! []
 
         MoveBall ->
             let
@@ -47,11 +60,21 @@ update msg model =
         CollideBall ->
             let
                 (positionX, positionY) = model.ballPosition
-                (newSpeedX, newSpeedY) = 
-                    redirectBall model.player1Position model.player2Position model.ballPosition model.ballSpeed
+                (obstacleY, wasUp) = model.obstaclePosition
+                (newSpeedX, newSpeedY) =
+                    redirectBall model.player1Position model.player2Position obstacleY model.ballPosition model.ballSpeed
             in
                 ({model | ballSpeed = (newSpeedX, newSpeedY)}, Cmd.none)
-                
+
+
+        MoveObstacle ->
+          let
+            (actualPosition, wasUp) = model.obstaclePosition
+            (position, isUp) = getObstaclePosition model.obstaclePosition
+            movement = (-1) * (actualPosition - position)
+            newObstacleForm = moveY movement model.obstacle
+          in
+          {model | obstacle = newObstacleForm, obstaclePosition = (position, isUp)} ![]
 
         MovePlayer1 deslocation ->
           let
@@ -121,11 +144,38 @@ update msg model =
                 , Cmd.none
           )
 
-checkCollision : Float -> Float -> (Float, Float) -> Int
-checkCollision player1Y player2Y (xBallPosition, yBallPosition) = 
+-- Checks where and to where obstacle is going
+-- True = Up // False == Down
+getObstaclePosition : (Float, Bool) -> (Float, Bool)
+getObstaclePosition (y, isUp) =
+    case isUp of
+      True ->
+          if y >= 200 then
+            ((y-5), False)
+          else
+            ((y+5), True)
+      False ->
+          if y <= -200 then
+            ((y+5), True)
+          else
+            ((y-5), False)
+
+-- gets: PositionY1, PositionY2, PositionYObstacle, Position Ball
+-- sets: integer that defines the collision type
+-- Collision 1 -> When the ball collides with a player or the obstacle
+-- Collision 2 -> When collides with vertical walls
+-- Collision 3 -> When reach the end of screen (replace for end game?)
+-- Collision 0 -> None
+checkCollision : Float -> Float -> Float -> (Float, Float) -> Int
+checkCollision player1Y player2Y obstacleY (xBallPosition, yBallPosition) =
     if xBallPosition >= 225 && yBallPosition + 5 >= player2Y - 45 && yBallPosition + 5 <= player2Y + 45 then
         1
     else if xBallPosition <= -225 && yBallPosition - 5 >= player1Y - 45 && yBallPosition - 5 <= player1Y + 45 then
+        1
+-- Two next if verifies if the ball collides the obstacle
+    else if xBallPosition >= -5 && xBallPosition <= 5 && yBallPosition - 5 >= obstacleY - 45 && yBallPosition - 5 <= obstacleY + 45 then
+        1
+    else if xBallPosition >= -5 && xBallPosition <= 5 && yBallPosition + 5 >= obstacleY - 45 && yBallPosition + 5 <= obstacleY + 45 then
         1
     else if yBallPosition >= 245 || yBallPosition <= -245 then
         2
@@ -134,15 +184,15 @@ checkCollision player1Y player2Y (xBallPosition, yBallPosition) =
     else
         0
 
-redirectBall : Float -> Float -> (Float, Float) -> (Float, Float) -> (Float, Float)
-redirectBall player1Y player2Y (xBallPosition, yBallPosition) (xBallSpeed, yBallSpeed) = 
+redirectBall : Float -> Float -> Float -> (Float, Float) -> (Float, Float) -> (Float, Float)
+redirectBall player1Y player2Y obstacleY (xBallPosition, yBallPosition) (xBallSpeed, yBallSpeed) =
     let
-        hasCollided = checkCollision player1Y player2Y (xBallPosition, yBallPosition)  
-    in 
+        hasCollided = checkCollision player1Y player2Y obstacleY (xBallPosition, yBallPosition)
+    in
         case hasCollided of
-            1 -> 
+            1 ->
                 (-xBallSpeed, yBallSpeed)
-            2 -> 
+            2 ->
                 (xBallSpeed, -yBallSpeed)
             _ ->
                 (xBallSpeed, yBallSpeed)
