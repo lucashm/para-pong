@@ -23,6 +23,6 @@ view model =
         Keyboard.Extra.wasd model.pressedKeys
     in
       div [style backgroundStyle]
-          [ toHtml ( Collage.collage 500 500 [model.background , model.player1] )
+          [ toHtml ( Collage.collage 500 500 [model.background , model.player1, model.player2] )
           , Html.text (toString model.pressedKeys)
           ]

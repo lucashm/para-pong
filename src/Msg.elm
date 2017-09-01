@@ -31,7 +31,7 @@ update msg model =
             newModel = moveY deslocation model.player1
           in
             case model.player1Position of
-              220 ->
+              205 -> --   205 = 250 - 45 : limit of where the player can go
                   case deslocation of
                       (-5) ->
                         update (UpdatePlayer1Position deslocation) {model | player1 = newModel}
@@ -39,7 +39,7 @@ update msg model =
                       _ ->
                         (model, Cmd.none)
 
-              (-220) ->
+              (-205) ->
                   case deslocation of
                       (-5) ->
                         (model, Cmd.none)

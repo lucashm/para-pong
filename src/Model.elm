@@ -7,6 +7,7 @@ import Time exposing (..)
 
 type alias Model =
     { player1 : Collage.Form
+    , player2 : Collage.Form
     , player1Position : Float
     , pressedKeys : List Key
     , time : Time
@@ -16,6 +17,7 @@ type alias Model =
 init : Model
 init =
      { player1 = createPlayer1
+     , player2 = createPlayer2
      , player1Position = 0
      , pressedKeys = []
      , time = 0
@@ -25,7 +27,13 @@ createPlayer1 : Collage.Form
 createPlayer1 =
     Collage.collage 10 90 [ Collage.filled blue (Collage.rect 10 90)]
     |> toForm
-    |> Collage.move (-230, 0)
+    |> Collage.move (-235, 0)
+
+createPlayer2 : Collage.Form
+createPlayer2 =
+    Collage.collage 10 90 [ Collage.filled blue (Collage.rect 10 90)]
+    |> toForm
+    |> Collage.move (235, 0)
 
 createBackground : Collage.Form
 createBackground =
