@@ -12,7 +12,11 @@ type alias Model =
     , player2Position : Float
     , pressedKeys : List Key
     , time : Time
-    , background : Collage.Form}
+    , background : Collage.Form
+    , ball : Collage.Form
+    , ballPosition : (Float, Float)
+    , ballSpeed : (Float, Float)
+    }
 
 
 init : Model
@@ -23,21 +27,28 @@ init =
      , player2Position = 0
      , pressedKeys = []
      , time = 0
-     , background = createBackground }
+     , background = createBackground
+     , ball = createBall
+     , ballPosition = (0,0)
+     , ballSpeed = (1, 1)
+      }
+
+
+createBall : Collage.Form
+createBall =
+    Collage.filled blue (Collage.rect 10 10)
+    |> Collage.move (0, 0)
 
 createPlayer1 : Collage.Form
 createPlayer1 =
-    Collage.collage 10 90 [ Collage.filled blue (Collage.rect 10 90)]
-    |> toForm
+    Collage.filled blue (Collage.rect 10 90)
     |> Collage.move (-235, 0)
 
 createPlayer2 : Collage.Form
 createPlayer2 =
-    Collage.collage 10 90 [ Collage.filled blue (Collage.rect 10 90)]
-    |> toForm
+    Collage.filled blue (Collage.rect 10 90)
     |> Collage.move (235, 0)
 
 createBackground : Collage.Form
 createBackground =
-    Collage.collage 500 500 [ Collage.filled  red (Collage.rect 500 500) ]
-    |> toForm
+    Collage.filled  red (Collage.rect 500 500)

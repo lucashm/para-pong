@@ -16,6 +16,7 @@ type Msg
     | UpdatePlayer2Position Float
     | MovePlayer2 Float
     | Tick Time
+    | MoveBall
 
 
 update : Msg -> Model.Model -> ( Model.Model, Cmd Msg )
@@ -29,6 +30,17 @@ update msg model =
           in
             update (MovePlayer1 direction1) { model | time = newTime }
             |> andThen  (MovePlayer2 direction2)
+            |> andThen  (MoveBall)
+
+        MoveBall ->
+            let
+                (positionX, positionY) = model.ballPosition
+                (speedX, speedY) = model.ballSpeed
+                newBallPosition = (positionX + speedX, positionY + speedY)
+                newModel = moveX speedX model.ball
+                            |> moveY speedY
+            in
+                ({model | ball = newModel, ballPosition = newBallPosition}, Cmd.none)
 
         MovePlayer1 deslocation ->
           let
