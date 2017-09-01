@@ -121,14 +121,18 @@ update msg model =
                 , Cmd.none
           )
 
-checkCollision : Float -> Float -> (Float, Float) -> Bool
+checkCollision : Float -> Float -> (Float, Float) -> Int
 checkCollision player1Y player2Y (xBallPosition, yBallPosition) = 
-    if xBallPosition == 230 && yBallPosition + 5 >= player2Y - 45 && yBallPosition + 5 <= player2Y + 45 then
-        True
-    else if xBallPosition == -230 && yBallPosition - 5 >= player1Y - 45 && yBallPosition - 5 <= player1Y + 45 then
-        True
+    if xBallPosition >= 225 && yBallPosition + 5 >= player2Y - 45 && yBallPosition + 5 <= player2Y + 45 then
+        1
+    else if xBallPosition <= -225 && yBallPosition - 5 >= player1Y - 45 && yBallPosition - 5 <= player1Y + 45 then
+        1
+    else if yBallPosition >= 245 || yBallPosition <= -245 then
+        2
+    else if xBallPosition == 250 || xBallPosition <= -250 then
+        3
     else
-        False
+        0
 
 redirectBall : Float -> Float -> (Float, Float) -> (Float, Float) -> (Float, Float)
 redirectBall player1Y player2Y (xBallPosition, yBallPosition) (xBallSpeed, yBallSpeed) = 
@@ -136,9 +140,11 @@ redirectBall player1Y player2Y (xBallPosition, yBallPosition) (xBallSpeed, yBall
         hasCollided = checkCollision player1Y player2Y (xBallPosition, yBallPosition)  
     in 
         case hasCollided of
-            True -> 
-                (-xBallSpeed, -yBallSpeed)
-            False ->
+            1 -> 
+                (-xBallSpeed, yBallSpeed)
+            2 -> 
+                (xBallSpeed, -yBallSpeed)
+            _ ->
                 (xBallSpeed, yBallSpeed)
 
 getPlayer1Command : List Key -> Float

@@ -30,7 +30,7 @@ init =
      , background = createBackground
      , ball = createBall
      , ballPosition = (0,0)
-     , ballSpeed = (1, 1)
+     , ballSpeed = (5, 2)
       }
 
 
