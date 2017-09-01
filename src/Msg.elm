@@ -17,6 +17,7 @@ type Msg
     | MovePlayer2 Float
     | Tick Time
     | MoveBall
+    | CollideBall
 
 
 update : Msg -> Model.Model -> ( Model.Model, Cmd Msg )
@@ -31,6 +32,7 @@ update msg model =
             update (MovePlayer1 direction1) { model | time = newTime }
             |> andThen  (MovePlayer2 direction2)
             |> andThen  (MoveBall)
+            |> andThen  (CollideBall)
 
         MoveBall ->
             let
@@ -41,6 +43,15 @@ update msg model =
                             |> moveY speedY
             in
                 ({model | ball = newModel, ballPosition = newBallPosition}, Cmd.none)
+
+        CollideBall ->
+            let
+                (positionX, positionY) = model.ballPosition
+                (newSpeedX, newSpeedY) = 
+                    redirectBall model.player1Position model.player2Position model.ballPosition model.ballSpeed
+            in
+                ({model | ballSpeed = (newSpeedX, newSpeedY)}, Cmd.none)
+                
 
         MovePlayer1 deslocation ->
           let
@@ -110,6 +121,25 @@ update msg model =
                 , Cmd.none
           )
 
+checkCollision : Float -> Float -> (Float, Float) -> Bool
+checkCollision player1Y player2Y (xBallPosition, yBallPosition) = 
+    if xBallPosition == 230 && yBallPosition + 5 >= player2Y - 45 && yBallPosition + 5 <= player2Y + 45 then
+        True
+    else if xBallPosition == -230 && yBallPosition - 5 >= player1Y - 45 && yBallPosition - 5 <= player1Y + 45 then
+        True
+    else
+        False
+
+redirectBall : Float -> Float -> (Float, Float) -> (Float, Float) -> (Float, Float)
+redirectBall player1Y player2Y (xBallPosition, yBallPosition) (xBallSpeed, yBallSpeed) = 
+    let
+        hasCollided = checkCollision player1Y player2Y (xBallPosition, yBallPosition)  
+    in 
+        case hasCollided of
+            True -> 
+                (-xBallSpeed, -yBallSpeed)
+            False ->
+                (xBallSpeed, yBallSpeed)
 
 getPlayer1Command : List Key -> Float
 getPlayer1Command pressedKeys =
