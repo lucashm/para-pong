@@ -18,6 +18,7 @@ type Msg
     | Tick Time
     | MoveBall
     | CollideBall
+    | IncreaseSpeed Time
 
 
 update : Msg -> Model.Model -> ( Model.Model, Cmd Msg )
@@ -34,6 +35,16 @@ update msg model =
             |> andThen  (MoveBall)
             |> andThen  (CollideBall)
 
+
+        IncreaseSpeed newTime ->
+          let
+            (x,y) = model.ballSpeed
+          in
+          { model
+          | ballSpeed = ((x * 1.01),(y * 1.02))
+          , time = newTime
+          } ! []
+
         MoveBall ->
             let
                 (positionX, positionY) = model.ballPosition
@@ -47,11 +58,11 @@ update msg model =
         CollideBall ->
             let
                 (positionX, positionY) = model.ballPosition
-                (newSpeedX, newSpeedY) = 
+                (newSpeedX, newSpeedY) =
                     redirectBall model.player1Position model.player2Position model.ballPosition model.ballSpeed
             in
                 ({model | ballSpeed = (newSpeedX, newSpeedY)}, Cmd.none)
-                
+
 
         MovePlayer1 deslocation ->
           let
@@ -122,7 +133,7 @@ update msg model =
           )
 
 checkCollision : Float -> Float -> (Float, Float) -> Int
-checkCollision player1Y player2Y (xBallPosition, yBallPosition) = 
+checkCollision player1Y player2Y (xBallPosition, yBallPosition) =
     if xBallPosition >= 225 && yBallPosition + 5 >= player2Y - 45 && yBallPosition + 5 <= player2Y + 45 then
         1
     else if xBallPosition <= -225 && yBallPosition - 5 >= player1Y - 45 && yBallPosition - 5 <= player1Y + 45 then
@@ -135,14 +146,14 @@ checkCollision player1Y player2Y (xBallPosition, yBallPosition) =
         0
 
 redirectBall : Float -> Float -> (Float, Float) -> (Float, Float) -> (Float, Float)
-redirectBall player1Y player2Y (xBallPosition, yBallPosition) (xBallSpeed, yBallSpeed) = 
+redirectBall player1Y player2Y (xBallPosition, yBallPosition) (xBallSpeed, yBallSpeed) =
     let
-        hasCollided = checkCollision player1Y player2Y (xBallPosition, yBallPosition)  
-    in 
+        hasCollided = checkCollision player1Y player2Y (xBallPosition, yBallPosition)
+    in
         case hasCollided of
-            1 -> 
+            1 ->
                 (-xBallSpeed, yBallSpeed)
-            2 -> 
+            2 ->
                 (xBallSpeed, -yBallSpeed)
             _ ->
                 (xBallSpeed, yBallSpeed)
