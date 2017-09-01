@@ -16,6 +16,8 @@ type alias Model =
     , ball : Collage.Form
     , ballPosition : (Float, Float)
     , ballSpeed : (Float, Float)
+    , obstacle: Collage.Form
+    , obstaclePosition: (Float, Bool)
     }
 
 
@@ -31,7 +33,15 @@ init =
      , ball = createBall
      , ballPosition = (0,0)
      , ballSpeed = (5, 2)
+     , obstacle = createObstacle
+     , obstaclePosition = (0, False)
       }
+
+
+createObstacle : Collage.Form
+createObstacle =
+    Collage.filled blue (Collage.rect 10 90)
+    |> Collage.move (0, 0)
 
 
 createBall : Collage.Form
