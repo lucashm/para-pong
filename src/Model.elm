@@ -10,6 +10,8 @@ type alias Model =
     , player2 : Collage.Form
     , player1Position : Float
     , player2Position : Float
+    , p1Score : Float
+    , p2Score : Float
     , pressedKeys : List Key
     , time : Time
     , background : Collage.Form
@@ -27,6 +29,8 @@ init =
      , player2 = createPlayer2
      , player1Position = 0
      , player2Position = 0
+     , p1Score = 0
+     , p2Score = 0
      , pressedKeys = []
      , time = 0
      , background = createBackground
