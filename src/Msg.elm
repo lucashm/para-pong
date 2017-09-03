@@ -45,7 +45,7 @@ update msg model =
             (x,y) = model.ballSpeed
           in
           { model
-          | ballSpeed = ((x * 1.01),(y * 1.02))
+          | ballSpeed = ((x * 1.001),(y * 1.002))
           , time = newTime
           } ! []
 
@@ -108,12 +108,13 @@ update msg model =
             p1ScoreModel = model.p1Score
             p2ScoreModel = model.p2Score
             (xBallPosition, yBallPosition) = model.ballPosition
+            newBallPosition = (0, 0)
           in
             case scored xBallPosition of
               1 ->
-                ({model | p1Score = p1ScoreModel + 1}, Cmd.none)
+                ({model | p1Score = p1ScoreModel + 1, ballPosition = newBallPosition, ball = Model.createBall}, Cmd.none)
               2 ->
-                ({model | p2Score = p2ScoreModel + 1}, Cmd.none)
+                ({model | p2Score = p2ScoreModel + 1, ballPosition = newBallPosition, ball = Model.createBall}, Cmd.none)
               _ ->
                 (model, Cmd.none)
 
