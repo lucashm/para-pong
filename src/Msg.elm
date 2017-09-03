@@ -112,9 +112,9 @@ update msg model =
           in
             case scored xBallPosition of
               1 ->
-                ({model | p1Score = p1ScoreModel + 1, ballPosition = newBallPosition, ball = Model.createBall}, Cmd.none)
+                ({model | p1Score = p1ScoreModel + 1, ballPosition = newBallPosition, ball = Model.createBall, ballSpeed = (5, 2)}, Cmd.none)
               2 ->
-                ({model | p2Score = p2ScoreModel + 1, ballPosition = newBallPosition, ball = Model.createBall}, Cmd.none)
+                ({model | p2Score = p2ScoreModel + 1, ballPosition = newBallPosition, ball = Model.createBall, ballSpeed = (-5, 2)}, Cmd.none)
               _ ->
                 (model, Cmd.none)
 
