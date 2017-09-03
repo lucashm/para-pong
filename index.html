@@ -12599,7 +12599,7 @@ var _ohanhi$keyboard_extra$Keyboard_Extra$targetKey = A2(
 	A2(_elm_lang$core$Json_Decode$field, 'keyCode', _elm_lang$core$Json_Decode$int));
 var _user$project$Model$createBackground = A2(
 	_evancz$elm_graphics$Collage$filled,
-	_elm_lang$core$Color$red,
+	_elm_lang$core$Color$black,
 	A2(_evancz$elm_graphics$Collage$rect, 500, 500));
 var _user$project$Model$createPlayer2 = A2(
 	_evancz$elm_graphics$Collage$move,
@@ -12620,20 +12620,22 @@ var _user$project$Model$createBall = A2(
 	{ctor: '_Tuple2', _0: 0, _1: 0},
 	A2(
 		_evancz$elm_graphics$Collage$filled,
-		_elm_lang$core$Color$blue,
-		A2(_evancz$elm_graphics$Collage$rect, 10, 10)));
+		_elm_lang$core$Color$white,
+		_evancz$elm_graphics$Collage$circle(6.5)));
 var _user$project$Model$createObstacle = A2(
 	_evancz$elm_graphics$Collage$move,
 	{ctor: '_Tuple2', _0: 0, _1: 0},
 	A2(
 		_evancz$elm_graphics$Collage$filled,
-		_elm_lang$core$Color$blue,
+		_elm_lang$core$Color$purple,
 		A2(_evancz$elm_graphics$Collage$rect, 10, 90)));
 var _user$project$Model$init = {
 	player1: _user$project$Model$createPlayer1,
 	player2: _user$project$Model$createPlayer2,
 	player1Position: 0,
 	player2Position: 0,
+	p1Score: 0,
+	p2Score: 0,
 	pressedKeys: {ctor: '[]'},
 	time: 0,
 	background: _user$project$Model$createBackground,
@@ -12655,7 +12657,11 @@ var _user$project$Model$Model = function (a) {
 									return function (j) {
 										return function (k) {
 											return function (l) {
-												return {player1: a, player2: b, player1Position: c, player2Position: d, pressedKeys: e, time: f, background: g, ball: h, ballPosition: i, ballSpeed: j, obstacle: k, obstaclePosition: l};
+												return function (m) {
+													return function (n) {
+														return {player1: a, player2: b, player1Position: c, player2Position: d, p1Score: e, p2Score: f, pressedKeys: g, time: h, background: i, ball: j, ballPosition: k, ballSpeed: l, obstacle: m, obstaclePosition: n};
+													};
+												};
 											};
 										};
 									};
@@ -12674,12 +12680,15 @@ var _user$project$Msg$getPlayer2Command = function (pressedKeys) {
 var _user$project$Msg$getPlayer1Command = function (pressedKeys) {
 	return A2(_elm_lang$core$List$member, _ohanhi$keyboard_extra$Keyboard_Extra$CharW, pressedKeys) ? 5 : (A2(_elm_lang$core$List$member, _ohanhi$keyboard_extra$Keyboard_Extra$CharS, pressedKeys) ? -5 : 0);
 };
+var _user$project$Msg$scored = function (xBallPosition) {
+	return (_elm_lang$core$Native_Utils.cmp(xBallPosition, 250) > -1) ? 1 : ((_elm_lang$core$Native_Utils.cmp(xBallPosition, -250) < 1) ? 2 : 0);
+};
 var _user$project$Msg$checkCollision = F4(
 	function (player1Y, player2Y, obstacleY, _p0) {
 		var _p1 = _p0;
 		var _p3 = _p1._1;
 		var _p2 = _p1._0;
-		return ((_elm_lang$core$Native_Utils.cmp(_p2, 225) > -1) && ((_elm_lang$core$Native_Utils.cmp(_p3 + 5, player2Y - 45) > -1) && (_elm_lang$core$Native_Utils.cmp(_p3 + 5, player2Y + 45) < 1))) ? 1 : (((_elm_lang$core$Native_Utils.cmp(_p2, -225) < 1) && ((_elm_lang$core$Native_Utils.cmp(_p3 - 5, player1Y - 45) > -1) && (_elm_lang$core$Native_Utils.cmp(_p3 - 5, player1Y + 45) < 1))) ? 1 : (((_elm_lang$core$Native_Utils.cmp(_p2, -5) > -1) && ((_elm_lang$core$Native_Utils.cmp(_p2, 5) < 1) && ((_elm_lang$core$Native_Utils.cmp(_p3 - 5, obstacleY - 45) > -1) && (_elm_lang$core$Native_Utils.cmp(_p3 - 5, obstacleY + 45) < 1)))) ? 1 : (((_elm_lang$core$Native_Utils.cmp(_p2, -5) > -1) && ((_elm_lang$core$Native_Utils.cmp(_p2, 5) < 1) && ((_elm_lang$core$Native_Utils.cmp(_p3 + 5, obstacleY - 45) > -1) && (_elm_lang$core$Native_Utils.cmp(_p3 + 5, obstacleY + 45) < 1)))) ? 1 : (((_elm_lang$core$Native_Utils.cmp(_p3, 245) > -1) || (_elm_lang$core$Native_Utils.cmp(_p3, -245) < 1)) ? 2 : ((_elm_lang$core$Native_Utils.eq(_p2, 250) || (_elm_lang$core$Native_Utils.cmp(_p2, -250) < 1)) ? 3 : 0)))));
+		return ((_elm_lang$core$Native_Utils.cmp(_p2, 221.5) > -1) && ((_elm_lang$core$Native_Utils.cmp(_p2, 235) < 1) && ((_elm_lang$core$Native_Utils.cmp(_p3 + 5, player2Y - 45) > -1) && (_elm_lang$core$Native_Utils.cmp(_p3 + 5, player2Y + 45) < 1)))) ? 1 : (((_elm_lang$core$Native_Utils.cmp(_p2, -221.5) < 1) && ((_elm_lang$core$Native_Utils.cmp(_p2, -235) > -1) && ((_elm_lang$core$Native_Utils.cmp(_p3 - 5, player1Y - 45) > -1) && (_elm_lang$core$Native_Utils.cmp(_p3 - 5, player1Y + 45) < 1)))) ? 1 : (((_elm_lang$core$Native_Utils.cmp(_p2, -5) > -1) && ((_elm_lang$core$Native_Utils.cmp(_p2, 5) < 1) && ((_elm_lang$core$Native_Utils.cmp(_p3 - 5, obstacleY - 45) > -1) && (_elm_lang$core$Native_Utils.cmp(_p3 - 5, obstacleY + 45) < 1)))) ? 1 : (((_elm_lang$core$Native_Utils.cmp(_p2, -5) > -1) && ((_elm_lang$core$Native_Utils.cmp(_p2, 5) < 1) && ((_elm_lang$core$Native_Utils.cmp(_p3 + 5, obstacleY - 45) > -1) && (_elm_lang$core$Native_Utils.cmp(_p3 + 5, obstacleY + 45) < 1)))) ? 1 : (((_elm_lang$core$Native_Utils.cmp(_p3, 245) > -1) || (_elm_lang$core$Native_Utils.cmp(_p3, -245) < 1)) ? 2 : ((_elm_lang$core$Native_Utils.eq(_p2, 250) || (_elm_lang$core$Native_Utils.cmp(_p2, -250) < 1)) ? 3 : 0)))));
 	});
 var _user$project$Msg$redirectBall = F5(
 	function (player1Y, player2Y, obstacleY, _p5, _p4) {
@@ -12713,6 +12722,7 @@ var _user$project$Msg$getObstaclePosition = function (_p11) {
 		return (_elm_lang$core$Native_Utils.cmp(_p14, -200) < 1) ? {ctor: '_Tuple2', _0: _p14 + 5, _1: true} : {ctor: '_Tuple2', _0: _p14 - 5, _1: false};
 	}
 };
+var _user$project$Msg$UpdateScore = {ctor: 'UpdateScore'};
 var _user$project$Msg$MoveObstacle = {ctor: 'MoveObstacle'};
 var _user$project$Msg$IncreaseSpeed = function (a) {
 	return {ctor: 'IncreaseSpeed', _0: a};
@@ -12745,22 +12755,25 @@ var _user$project$Msg$update = F2(
 					var direction1 = _user$project$Msg$getPlayer1Command(model.pressedKeys);
 					return A2(
 						_user$project$Msg$andThen,
-						_user$project$Msg$MoveObstacle,
+						_user$project$Msg$UpdateScore,
 						A2(
 							_user$project$Msg$andThen,
-							_user$project$Msg$CollideBall,
+							_user$project$Msg$MoveObstacle,
 							A2(
 								_user$project$Msg$andThen,
-								_user$project$Msg$MoveBall,
+								_user$project$Msg$CollideBall,
 								A2(
 									_user$project$Msg$andThen,
-									_user$project$Msg$MovePlayer2(direction2),
+									_user$project$Msg$MoveBall,
 									A2(
-										_user$project$Msg$update,
-										_user$project$Msg$MovePlayer1(direction1),
-										_elm_lang$core$Native_Utils.update(
-											model,
-											{time: _p15._0}))))));
+										_user$project$Msg$andThen,
+										_user$project$Msg$MovePlayer2(direction2),
+										A2(
+											_user$project$Msg$update,
+											_user$project$Msg$MovePlayer1(direction1),
+											_elm_lang$core$Native_Utils.update(
+												model,
+												{time: _p15._0})))))));
 				case 'IncreaseSpeed':
 					var _p16 = model.ballSpeed;
 					var x = _p16._0;
@@ -12870,6 +12883,44 @@ var _user$project$Msg$update = F2(
 							model = _v15;
 							continue update;
 					}
+				case 'UpdateScore':
+					var newBallPosition = {ctor: '_Tuple2', _0: 0, _1: 0};
+					var _p28 = model.ballPosition;
+					var xBallPosition = _p28._0;
+					var yBallPosition = _p28._1;
+					var p2ScoreModel = model.p2Score;
+					var p1ScoreModel = model.p1Score;
+					var _p29 = _user$project$Msg$scored(xBallPosition);
+					switch (_p29) {
+						case 1:
+							return {
+								ctor: '_Tuple2',
+								_0: _elm_lang$core$Native_Utils.update(
+									model,
+									{
+										p1Score: p1ScoreModel + 1,
+										ballPosition: newBallPosition,
+										ball: _user$project$Model$createBall,
+										ballSpeed: {ctor: '_Tuple2', _0: 5, _1: 2}
+									}),
+								_1: _elm_lang$core$Platform_Cmd$none
+							};
+						case 2:
+							return {
+								ctor: '_Tuple2',
+								_0: _elm_lang$core$Native_Utils.update(
+									model,
+									{
+										p2Score: p2ScoreModel + 1,
+										ballPosition: newBallPosition,
+										ball: _user$project$Model$createBall,
+										ballSpeed: {ctor: '_Tuple2', _0: -5, _1: 2}
+									}),
+								_1: _elm_lang$core$Platform_Cmd$none
+							};
+						default:
+							return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+					}
 				case 'UpdatePlayer1Position':
 					var newModel = model.player1Position + _p15._0;
 					return A2(
@@ -12879,43 +12930,43 @@ var _user$project$Msg$update = F2(
 							{player1Position: newModel}),
 						{ctor: '[]'});
 				case 'MovePlayer2':
-					var _p31 = _p15._0;
-					var newModel = A2(_evancz$elm_graphics$Collage$moveY, _p31, model.player2);
-					var _p28 = model.player2Position;
-					switch (_p28) {
+					var _p33 = _p15._0;
+					var newModel = A2(_evancz$elm_graphics$Collage$moveY, _p33, model.player2);
+					var _p30 = model.player2Position;
+					switch (_p30) {
 						case 205:
-							var _p29 = _p31;
-							if (_p29 === -5) {
-								var _v18 = _user$project$Msg$UpdatePlayer2Position(_p31),
-									_v19 = _elm_lang$core$Native_Utils.update(
+							var _p31 = _p33;
+							if (_p31 === -5) {
+								var _v19 = _user$project$Msg$UpdatePlayer2Position(_p33),
+									_v20 = _elm_lang$core$Native_Utils.update(
 									model,
 									{player2: newModel});
-								msg = _v18;
-								model = _v19;
+								msg = _v19;
+								model = _v20;
 								continue update;
 							} else {
 								return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 							}
 						case -205:
-							var _p30 = _p31;
-							if (_p30 === -5) {
+							var _p32 = _p33;
+							if (_p32 === -5) {
 								return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 							} else {
-								var _v21 = _user$project$Msg$UpdatePlayer2Position(_p31),
-									_v22 = _elm_lang$core$Native_Utils.update(
+								var _v22 = _user$project$Msg$UpdatePlayer2Position(_p33),
+									_v23 = _elm_lang$core$Native_Utils.update(
 									model,
 									{player2: newModel});
-								msg = _v21;
-								model = _v22;
+								msg = _v22;
+								model = _v23;
 								continue update;
 							}
 						default:
-							var _v23 = _user$project$Msg$UpdatePlayer2Position(_p31),
-								_v24 = _elm_lang$core$Native_Utils.update(
+							var _v24 = _user$project$Msg$UpdatePlayer2Position(_p33),
+								_v25 = _elm_lang$core$Native_Utils.update(
 								model,
 								{player2: newModel});
-							msg = _v23;
-							model = _v24;
+							msg = _v24;
+							model = _v25;
 							continue update;
 					}
 				case 'UpdatePlayer2Position':
@@ -12940,17 +12991,17 @@ var _user$project$Msg$update = F2(
 		}
 	});
 var _user$project$Msg$andThen = F2(
-	function (msg, _p32) {
-		var _p33 = _p32;
-		var _p34 = A2(_user$project$Msg$update, msg, _p33._0);
-		var newmodel = _p34._0;
-		var newcmd = _p34._1;
+	function (msg, _p34) {
+		var _p35 = _p34;
+		var _p36 = A2(_user$project$Msg$update, msg, _p35._0);
+		var newmodel = _p36._0;
+		var newcmd = _p36._1;
 		return A2(
 			_elm_lang$core$Platform_Cmd_ops['!'],
 			newmodel,
 			{
 				ctor: '::',
-				_0: _p33._1,
+				_0: _p35._1,
 				_1: {
 					ctor: '::',
 					_0: newcmd,
@@ -12960,6 +13011,31 @@ var _user$project$Msg$andThen = F2(
 	});
 var _user$project$Msg$KeyboardMsg = function (a) {
 	return {ctor: 'KeyboardMsg', _0: a};
+};
+var _user$project$Style$scoreStyle = {
+	ctor: '::',
+	_0: {ctor: '_Tuple2', _0: 'display', _1: 'flex'},
+	_1: {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 'align-items', _1: 'center'},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'margin-bottom', _1: '10px'},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'flex-direction', _1: 'row'},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'width', _1: '400px'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'justify-content', _1: 'space-between'},
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		}
+	}
 };
 var _user$project$Style$backgroundStyle = {
 	ctor: '::',
@@ -12993,36 +13069,77 @@ var _user$project$View$view = function (model) {
 		},
 		{
 			ctor: '::',
-			_0: _evancz$elm_graphics$Element$toHtml(
-				A3(
-					_evancz$elm_graphics$Collage$collage,
-					500,
-					500,
-					{
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$style(_user$project$Style$scoreStyle),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								_elm_lang$core$Basics$toString(model.p1Score)),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
 						ctor: '::',
-						_0: model.background,
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('x'),
+								_1: {ctor: '[]'}
+							}),
 						_1: {
 							ctor: '::',
-							_0: model.player1,
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(
+										_elm_lang$core$Basics$toString(model.p2Score)),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: _evancz$elm_graphics$Element$toHtml(
+					A3(
+						_evancz$elm_graphics$Collage$collage,
+						500,
+						500,
+						{
+							ctor: '::',
+							_0: model.background,
 							_1: {
 								ctor: '::',
-								_0: model.player2,
+								_0: model.player1,
 								_1: {
 									ctor: '::',
-									_0: model.obstacle,
+									_0: model.player2,
 									_1: {
 										ctor: '::',
-										_0: model.ball,
-										_1: {ctor: '[]'}
+										_0: model.obstacle,
+										_1: {
+											ctor: '::',
+											_0: model.ball,
+											_1: {ctor: '[]'}
+										}
 									}
 								}
 							}
-						}
-					})),
-			_1: {
-				ctor: '::',
-				_0: _elm_lang$html$Html$text(
-					_elm_lang$core$Basics$toString(model.pressedKeys)),
+						})),
 				_1: {ctor: '[]'}
 			}
 		});

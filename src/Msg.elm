@@ -20,6 +20,8 @@ type Msg
     | CollideBall
     | IncreaseSpeed Time
     | MoveObstacle
+    | UpdateScore
+
 
 
 update : Msg -> Model.Model -> ( Model.Model, Cmd Msg )
@@ -36,6 +38,7 @@ update msg model =
             |> andThen  (MoveBall)
             |> andThen  (CollideBall)
             |> andThen (MoveObstacle)
+            |> andThen (UpdateScore)
 
 
         IncreaseSpeed newTime ->
@@ -101,6 +104,21 @@ update msg model =
               _ ->
                   update (UpdatePlayer1Position deslocation) {model | player1 = newModel}
 
+        UpdateScore ->
+          let
+            p1ScoreModel = model.p1Score
+            p2ScoreModel = model.p2Score
+            (xBallPosition, yBallPosition) = model.ballPosition
+            newBallPosition = (0, 0)
+          in
+            case scored xBallPosition of
+              1 ->
+                ({model | p1Score = p1ScoreModel + 1, ballPosition = newBallPosition, ball = Model.createBall, ballSpeed = (5, 2)}, Cmd.none)
+              2 ->
+                ({model | p2Score = p2ScoreModel + 1, ballPosition = newBallPosition, ball = Model.createBall, ballSpeed = (-5, 2)}, Cmd.none)
+              _ ->
+                (model, Cmd.none)
+
 
         UpdatePlayer1Position deslocation ->
           let
@@ -164,13 +182,14 @@ getObstaclePosition (y, isUp) =
 -- sets: integer that defines the collision type
 -- Collision 1 -> When the ball collides with a player or the obstacle
 -- Collision 2 -> When collides with vertical walls
--- Collision 3 -> When reach the end of screen (replace for end game?)
+-- Collision 3 -> When reach the right end of screen - P1 Score!
+-- COllision 4 - When reach the left end of screen - P2 Score!
 -- Collision 0 -> None
 checkCollision : Float -> Float -> Float -> (Float, Float) -> Int
 checkCollision player1Y player2Y obstacleY (xBallPosition, yBallPosition) =
-    if xBallPosition >= 225 && yBallPosition + 5 >= player2Y - 45 && yBallPosition + 5 <= player2Y + 45 then
+    if xBallPosition >= 221.5 && xBallPosition <= 235 && yBallPosition + 5 >= player2Y - 45 && yBallPosition + 5 <= player2Y + 45 then
         1
-    else if xBallPosition <= -225 && yBallPosition - 5 >= player1Y - 45 && yBallPosition - 5 <= player1Y + 45 then
+    else if xBallPosition <= -221.5 && xBallPosition >= -235 && yBallPosition - 5 >= player1Y - 45 && yBallPosition - 5 <= player1Y + 45 then
         1
 -- Two next if verifies if the ball collides the obstacle
     else if xBallPosition >= -5 && xBallPosition <= 5 && yBallPosition - 5 >= obstacleY - 45 && yBallPosition - 5 <= obstacleY + 45 then
@@ -183,6 +202,15 @@ checkCollision player1Y player2Y obstacleY (xBallPosition, yBallPosition) =
         3
     else
         0
+
+scored : Float -> Int
+scored xBallPosition =
+    if xBallPosition >= 250  then
+        1
+    else if xBallPosition <= -250 then
+        2
+    else
+      0
 
 redirectBall : Float -> Float -> Float -> (Float, Float) -> (Float, Float) -> (Float, Float)
 redirectBall player1Y player2Y obstacleY (xBallPosition, yBallPosition) (xBallSpeed, yBallSpeed) =

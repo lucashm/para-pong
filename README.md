@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 This project is bootstrapped with [Create Elm App](https://github.com/halfzebra/create-elm-app).
 
 Below you will find some information on how to perform basic tasks.  
@@ -360,3 +361,13 @@ GitHub Pages doesn’t support routers that use the HTML5 `pushState` history AP
 ## IDE setup for Hot Module Replacement
 
 Remember to disable [safe write](https://webpack.github.io/docs/webpack-dev-server.html#working-with-editors-ides-supporting-safe-write) if you are using VIM or IntelliJ IDE, such as WebStorm.
+=======
+# Para-pong
+
+## Mini game made in Elm lang
+
+### Other Libraries
+In addition of the standard libraries:
+-  [evancz/elm-graphics](http://package.elm-lang.org/packages/evancz/elm-graphics/1.0.1)
+- [ohanhi/keyboard-extra](http://package.elm-lang.org/packages/ohanhi/keyboard-extra/3.0.4)
+>>>>>>> master
