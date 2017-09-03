@@ -1,8 +1,7 @@
 module Model exposing (..)
 import Collage exposing (..)
-import Element exposing (..)
 import Keyboard.Extra exposing (..)
-import Color exposing (blue, red, purple)
+import Color exposing (blue, white, purple, black)
 import Time exposing (..)
 
 type alias Model =
@@ -44,13 +43,13 @@ init =
 
 createObstacle : Collage.Form
 createObstacle =
-    Collage.filled blue (Collage.rect 10 90)
+    Collage.filled purple (Collage.rect 10 90)
     |> Collage.move (0, 0)
 
 
 createBall : Collage.Form
 createBall =
-    Collage.filled blue (Collage.rect 10 10)
+    Collage.filled white (Collage.circle 6.5)
     |> Collage.move (0, 0)
 
 createPlayer1 : Collage.Form
@@ -65,4 +64,4 @@ createPlayer2 =
 
 createBackground : Collage.Form
 createBackground =
-    Collage.filled  red (Collage.rect 500 500)
+    Collage.filled  black (Collage.rect 500 500)

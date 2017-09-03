@@ -45,7 +45,7 @@ update msg model =
             (x,y) = model.ballSpeed
           in
           { model
-          | ballSpeed = ((x * 1.001),(y * 1.002))
+          | ballSpeed = ((x * 1.01),(y * 1.02))
           , time = newTime
           } ! []
 
@@ -186,9 +186,9 @@ getObstaclePosition (y, isUp) =
 -- Collision 0 -> None
 checkCollision : Float -> Float -> Float -> (Float, Float) -> Int
 checkCollision player1Y player2Y obstacleY (xBallPosition, yBallPosition) =
-    if xBallPosition >= 225 && yBallPosition + 5 >= player2Y - 45 && yBallPosition + 5 <= player2Y + 45 then
+    if xBallPosition >= 221.5 && xBallPosition <= 235 && yBallPosition + 5 >= player2Y - 45 && yBallPosition + 5 <= player2Y + 45 then
         1
-    else if xBallPosition <= -225 && yBallPosition - 5 >= player1Y - 45 && yBallPosition - 5 <= player1Y + 45 then
+    else if xBallPosition <= -221.5 && xBallPosition >= -235 && yBallPosition - 5 >= player1Y - 45 && yBallPosition - 5 <= player1Y + 45 then
         1
 -- Two next if verifies if the ball collides the obstacle
     else if xBallPosition >= -5 && xBallPosition <= 5 && yBallPosition - 5 >= obstacleY - 45 && yBallPosition - 5 <= obstacleY + 45 then

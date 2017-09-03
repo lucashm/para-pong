@@ -12,8 +12,9 @@ backgroundStyle =
 scoreStyle : List (String, String)
 scoreStyle =
   [ ("display", "flex")
-  , ("justify-content", "center")
   , ("align-items", "center")
-  , ("margin-top", "100px")
-  , ("flex-direction", "column")
+  , ("margin-bottom", "10px")
+  , ("flex-direction", "row")
+  , ("width", "400px")
+  , ("justify-content", "space-between")
   ]
